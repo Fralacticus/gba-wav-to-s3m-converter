@@ -1,0 +1,14 @@
+name: gbawavtos3mconverter
+version: 1.0.0
+repository: https://github.com/fralacticus/gba-wav-to-s3m-converter
+
+environment:
+  sdk: ^3.3.1
+
+dependencies:
+  args: ^2.5.0
+  ansicolor: ^2.0.2
+
+dev_dependencies:
+  lints: ^3.0.0
+
