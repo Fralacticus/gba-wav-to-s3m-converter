@@ -44,6 +44,12 @@ Assurez-vous d'avoir installé Dart sur votre système.
 Une méthode rapide et sans installation est de [télécharger directement l'archive du SDK](https://dart.dev/get-dart/archive) la plus récente pour Windows.  
 Il suffit ensuite d'ouvrir une console à la racine du code source et saisir le chemin de l'exécutable de Dart, comme ci-dessous.
 
+## Intialiser le projet
+- Lancez d'abord la commande d'initialisation (à ne faire qu'une fois) 
+```powershell
+"chemin/vers/le/sdk/bin/dart.exe" pub get
+```
+
 - **Convertir un fichier .wav :**
   Exécutez l'application en spécifiant le chemin du fichier .wav à convertir et le chemin de sortie pour le fichier S3M résultant :
 ```powershell
