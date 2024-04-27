@@ -50,7 +50,7 @@ Il suffit ensuite d'ouvrir une console à la racine du code source et saisir le 
 "chemin/vers/le/sdk/bin/dart.exe" ./bin/core/main.dart file -i "chemin/vers/le/fichier.wav" -o "chemin/vers/le/fichier.s3m"
 ```
 
-- **Agréger des fichiers WAV à partir d'un dossier :**
+- **Agréger des fichiers .wav à partir d'un dossier :**
   Exécutez l'application en spécifiant le chemin du dossier contenant les fichiers .wav et le chemin de sortie pour le fichier S3M résultant :
 ```powershell
 "chemin/vers/le/sdk/bin/dart.exe" ./bin/core/main.dart folder -i "chemin/vers/le/dossier" -o "chemin/vers/le/fichier.s3m"
