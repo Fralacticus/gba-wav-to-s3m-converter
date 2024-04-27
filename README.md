@@ -45,7 +45,7 @@ Une méthode rapide et sans installation est de [télécharger directement l'arc
 Il suffit ensuite d'ouvrir une console à la racine du code source et saisir le chemin de l'exécutable de Dart, comme ci-dessous.
 
 ## Intialiser le projet
-- Lancez d'abord la commande d'initialisation (à ne faire qu'une fois) 
+- Lancez d'abord la commande d'initialisation (à ne faire qu'une fois):  
 ```powershell
 "chemin/vers/le/sdk/bin/dart.exe" pub get
 ```
