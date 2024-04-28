@@ -1,6 +1,6 @@
 /*
  * Droits d'auteur 2024 Fralacticus fralacticus@gmail.com
- * Licence CC BY-SA 4.0 DEED, voir le fichier LICENSE
+ * Licence zlib, voir le fichier LICENSE
  */
 
 import 'dart:io';
@@ -147,16 +147,4 @@ class Wav {
       subChunk2Size.value_bytes +
       data.value_bytes;
   }
-}
-
-void main() {
-  String folder = r"E:\SAUVER\Creation\01-Jeux_GBA\005-Utilitaires\test_sox";
-  String wav_file = "$folder\\warfisa.wav";
-  String folder_decoupe = "$folder\\intel_decoup";
-  Wav wav = Wav(wav_file);
-  print("------ Avant");
-  print(wav);
-  wav.split_for_gba(90);
-  print("------ Après");
-  print(wav);
 }

@@ -1,9 +1,8 @@
 /*
  * Droits d'auteur 2024 Fralacticus fralacticus@gmail.com
- * Licence CC BY-SA 4.0, voir le fichier LICENSE
+ * Licence zlib, voir le fichier LICENSE
  */
 
-import "dart:convert";
 import "dart:io";
 import "package:args/command_runner.dart";
 import 'package:ansicolor/ansicolor.dart';

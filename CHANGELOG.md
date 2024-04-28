@@ -1,3 +1,7 @@
 ## 1.0.0
 
-- Initial version.
+- Version initiale.
+
+## 1.1.0
+
+- Retrait adhérence au logiciel externe SoX

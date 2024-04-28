@@ -1,4 +1,4 @@
-set "dossier=.\release\gba-wav-to-s3m-converter-1.0.0"
+set "dossier=.\release\gba-wav-to-s3m-converter-1.1.0"
 
 if exist %dossier%.zip del %dossier%.zip
 

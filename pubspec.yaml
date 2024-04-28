@@ -1,5 +1,5 @@
 name: gbawavtos3mconverter
-version: 1.0.0
+version: 1.1.0
 repository: https://github.com/fralacticus/gba-wav-to-s3m-converter
 
 environment:
