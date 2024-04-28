@@ -41,16 +41,16 @@ jobs:
         run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
         
       - name: Create versioned build directory
-        run: mkdir -p build/${{ env.VERSION }}
+        run: mkdir build
 
       - name: Compile applications
-        run: dart compile exe ./bin/core/main.dart -o ./build/${{ env.VERSION }}/${{ matrix.output-name }}
+        run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: build-${{ matrix.os }}-${{ env.VERSION }}
-          path: build/${{ env.VERSION }}
+          name: native-executables
+          path: build
                 
   release:
     needs: build
