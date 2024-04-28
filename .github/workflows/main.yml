@@ -5,10 +5,10 @@ name: CI Building Dart
 # Contrôle quand le workflow sera exécuté
 on:
   # Déclenche le workflow sur les événements push ou pull request mais seulement pour la branche master
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  #push:
+    #branches: [ master ]
+  #pull_request:
+    #branches: [ master ]
 
   # Permet de lancer ce workflow manuellement depuis l'onglet Actions
   workflow_dispatch:
@@ -41,18 +41,37 @@ jobs:
         run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
         
       - name: Create versioned build directory
-        run: mkdir ./build/${{ env.VERSION }}
+        run: mkdir build
 
       - name: Compile applications
-        run: dart compile exe ./bin/core/main.dart -o ./build/${{ env.VERSION }}/${{ matrix.output-name }}
+        run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}
                 
-      - name: Configure git
-        run: |
-          git config user.name 'github-actions'
-          git config user.email 'github-actions@github.com'
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v2
+        with:
+          name: build
+      
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          draft: false
+          prerelease: false
 
-      - name: Commit and push build directory
-        run: |
-          git add build/
-          git commit -m "Add compiled executables for release ${GITHUB_SHA}"
-          git push
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/${{ env.VERSION }}/${{ matrix.output-name }}
+          asset_name: ${{ matrix.output-name }}
+          asset_content_type: application/octet-stream    
