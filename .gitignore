@@ -16,3 +16,4 @@ pubspec.lock
 temp/*
 release/
 build/
+tests/
