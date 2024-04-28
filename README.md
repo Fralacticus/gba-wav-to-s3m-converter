@@ -10,8 +10,10 @@ Il s'adresse particulièrement aux développeurs utilisant la bibliothèque [But
 **Important :** Les données brutes sonores sont préservés (section 'data' des fichiers .wav).
 
 ## Compatibilité
-Ce logiciel est a été testé et validé sous Windows 11.  
-**Attention** : dans la release il y a des executables pour Linux et macOS, mais non vérifiés actuellement.
+Ce logiciel est a été testé et validé sous :
+- Windows 11
+- Ubuntu 23.10
+**Attention** : dans la release il y a un executable macOS, mais non vérifié actuellement.
 
 ## Options d'utilisation
 
