@@ -78,10 +78,10 @@ jobs:
       - name: Create and upload release
         uses: softprops/action-gh-release@v2.0.4
         with:
-          files: ./build/executables-${{ needs.build.outputs.version }}.zip.zip
-          tag_name: ${{ needs.build.outputs.version }}.zip
-          name: Release ${{ needs.build.outputs.version }}.zip
-          body: 'Release of version ${{ needs.build.outputs.version }}.zip'
+          files: ./build/executables-${{ needs.build.outputs.version }}.zip
+          tag_name: ${{ needs.build.outputs.version }}
+          name: Release ${{ needs.build.outputs.version }}
+          body: 'Release of version ${{ needs.build.outputs.version }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
    
