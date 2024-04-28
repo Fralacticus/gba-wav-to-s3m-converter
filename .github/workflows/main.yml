@@ -28,15 +28,27 @@ jobs:
           - os: windows-latest
             output-name: gba-wav-to-s3m-converter-windows.exe
     steps:
-          - uses: actions/checkout@v2
+          - uses: actions/checkout@v4
           - uses: dart-lang/setup-dart@v1.3
+          
           - name: Install dependencies
             run: dart pub get
+            
           - name: Extract version
             run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
-          - run: mkdir build
+            
+          - run: mkdir -p build
+
+          - name: Compile applications
           - run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}
-          - uses: actions/upload-artifact@v1
-            with:
-                name: native-executables-${{ env.VERSION }}
-                path: build
+          
+          - name: Configure git
+            run: |
+              git config user.name 'github-actions'
+              git config user.email 'github-actions@github.com'
+
+          - name: Commit and push build directory
+            run: |
+              git add build/
+              git commit -m "Add compiled executables for release ${GITHUB_SHA}"
+              git push
