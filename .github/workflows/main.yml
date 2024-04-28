@@ -41,7 +41,7 @@ jobs:
         run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
         
       - name: Create versioned build directory
-        run: mkdir build
+        run: mkdir -p build/${{ env.VERSION }}
 
       - name: Compile applications
         run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}
@@ -49,8 +49,8 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: native-executables
-          path: build
+          name: build-${{ matrix.os }}-${{ env.VERSION }}
+          path: build/${{ env.VERSION }}
                 
   release:
     needs: build
@@ -60,4 +60,31 @@ jobs:
       - uses: actions/download-artifact@v4.1.07
         with:
           path: build
+
+      - name: Zip the executables
+        run: |
+          cd build
+          zip -r executables-${{ needs.build.outputs.VERSION }}.zip ./*
+          cd ..
+
+      - name: Upload ZIP to Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.build.outputs.VERSION }}
+          release_name: Release ${{ needs.build.outputs.VERSION }}
+          body: 'Release of version ${{ needs.build.outputs.VERSION }}'
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.upload_zip_to_release.outputs.upload_url }}
+          asset_path: ./build/executables-${{ needs.build.outputs.VERSION }}.zip
+          asset_name: executables-${{ needs.build.outputs.VERSION }}.zip
+          asset_content_type: application/zip
    
