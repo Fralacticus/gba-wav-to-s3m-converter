@@ -1,16 +1,16 @@
-# This is a basic workflow to help you get started with Actions
+# C'est un workflow de base pour vous aider à démarrer avec Actions
 
 name: CI Building Dart
 
-# Controls when the workflow will run
+# Contrôle quand le workflow sera exécuté
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # Déclenche le workflow sur les événements push ou pull request mais seulement pour la branche master
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Permet de lancer ce workflow manuellement depuis l'onglet Actions
   workflow_dispatch:
 
 jobs:
@@ -20,6 +20,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
+        sdk: [3.3.1, stable]
         include:
           - os: ubuntu-latest
             output-name: gba-wav-to-s3m-converter-linux
@@ -28,27 +29,30 @@ jobs:
           - os: windows-latest
             output-name: gba-wav-to-s3m-converter-windows.exe
     steps:
-          - uses: actions/checkout@v4
-          - uses: dart-lang/setup-dart@v1.3
-          
-          - name: Install dependencies
-            run: dart pub get
-            
-          - name: Extract version
-            run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
-            
-          - run: mkdir -p build
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1.6.4
+        with:
+          sdk: ${{ matrix.sdk }}
+      
+      - name: Install dependencies
+        run: dart pub get
+        
+      - name: Extract version
+        run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
+        
+      - name: Create versioned build directory
+        run: mkdir -p build/${{ env.VERSION }}
 
-          - name: Compile applications
-          - run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}
-          
-          - name: Configure git
-            run: |
-              git config user.name 'github-actions'
-              git config user.email 'github-actions@github.com'
+      - name: Compile applications
+        run: dart compile exe ./bin/core/main.dart -o ./build/${{ env.VERSION }}/${{ matrix.output-name }}
+                
+      - name: Configure git
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@github.com'
 
-          - name: Commit and push build directory
-            run: |
-              git add build/
-              git commit -m "Add compiled executables for release ${GITHUB_SHA}"
-              git push
+      - name: Commit and push build directory
+        run: |
+          git add build/
+          git commit -m "Add compiled executables for release ${GITHUB_SHA}"
+          git push
