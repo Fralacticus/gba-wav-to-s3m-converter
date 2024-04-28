@@ -12,24 +12,35 @@ on:
 
   # Permet de lancer ce workflow manuellement depuis l'onglet Actions
   workflow_dispatch:
+    inputs:
+      confirm_run:
+        type: string
+        description: 'Tapez "oui" pour exécuter le deuxième job.'
+        required: true
+        default: 'non'
+      version:
+        description: 'Entrer numéro de version'
+        required: true
+        default: 0.0.0
+
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    outputs:
-      version: ${{ steps.set_version.outputs.version }}
-
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         sdk: [3.3.1]
         include:
           - os: ubuntu-latest
-            output-name: gba-wav-to-s3m-converter-linux
+            output-name: gba-wav-to-s3m-converter
+            alias: linux
           - os: macOS-latest
-            output-name: gba-wav-to-s3m-converter-mac
+            output-name: gba-wav-to-s3m-converter
+            alias: macOS
           - os: windows-latest
-            output-name: gba-wav-to-s3m-converter-windows.exe
+            output-name: gba-wav-to-s3m-converter.exe
+            alias: windows
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1.6.4
@@ -39,23 +50,23 @@ jobs:
       - name: Install dependencies
         run: dart pub get
         
-      - name: Extract version
-        id: set_version
-        run: echo "version=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
-        
       - name: Create versioned build directory
-        run: mkdir build
+        run: mkdir -p build/${{ matrix.alias }}
 
       - name: Compile applications
-        run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}
+        run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.alias }}/${{ matrix.output-name }}
+
+      - name: Copy LICENSE file
+        run: cp LICENSE ./build/${{ matrix.alias }}/LICENSE.txt
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: gba-wav-to-s3m-converter-${{ matrix.os }}-${{ steps.set_version.outputs.version }}          
-          path: build
+          name: gba-wav-to-s3m-converter-${{ matrix.alias }}-${{ github.event.inputs.version }}          
+          path: build/${{ matrix.alias }}
                 
   release:
+    if: ${{ github.event.inputs.confirm_run == 'oui' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -65,19 +76,38 @@ jobs:
         with:
           path: build
 
-      - name: Zip the executables
+      - name: List files in build directory
+        run: ls -R build/
+
+      - name: List files in release directories
         run: |
-          cd build
-          zip -r gba-wav-to-s3m-converter-${{ needs.build.outputs.version }}.zip ./*
-          cd ..
+          ls -la build/gba-wav-to-s3m-converter-linux-${{ github.event.inputs.version }}
+          ls -la build/gba-wav-to-s3m-converter-macOS-${{ github.event.inputs.version }}
+          ls -la build/gba-wav-to-s3m-converter-windows-${{ github.event.inputs.version }}
+
+      - name: Zip the executables for Linux
+        run: zip -j ./build/gba-wav-to-s3m-converter-linux-${{ github.event.inputs.version }}.zip ./build/gba-wav-to-s3m-converter-linux-${{ github.event.inputs.version }}/*
+        shell: bash
+
+      - name: Zip the executables for macOS
+        run: zip -j ./build/gba-wav-to-s3m-converter-macOS-${{ github.event.inputs.version }}.zip ./build/gba-wav-to-s3m-converter-macOS-${{ github.event.inputs.version }}/*
+        shell: bash
+
+      - name: Zip the executables for Windows
+        run: zip -j ./build/gba-wav-to-s3m-converter-windows-${{ github.event.inputs.version }}.zip ./build/gba-wav-to-s3m-converter-windows-${{ github.event.inputs.version }}/*
+        shell: bash
+
 
       - name: Create and upload release
         uses: softprops/action-gh-release@v2.0.4
         with:
-          files: ./build/gba-wav-to-s3m-converter-${{ needs.build.outputs.version }}.zip
-          tag_name: ${{ needs.build.outputs.version }}
-          name: Release ${{ needs.build.outputs.version }}
-          body: 'Release of version ${{ needs.build.outputs.version }}'
+          files: |
+            ./build/gba-wav-to-s3m-converter-linux-${{ github.event.inputs.version }}.zip
+            ./build/gba-wav-to-s3m-converter-macOS-${{ github.event.inputs.version }}.zip
+            ./build/gba-wav-to-s3m-converter-windows-${{ github.event.inputs.version }}.zip
+          tag_name: ${{ github.event.inputs.version }}
+          name: Release ${{ github.event.inputs.version }}
+          body: 'Release version ${{ github.event.inputs.version }}'
         env:
           GITHUB_TOKEN: ${{ secrets.MY_SECRET }}
    
