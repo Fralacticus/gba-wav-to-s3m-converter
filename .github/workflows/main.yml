@@ -56,8 +56,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4.3.3
         with:
-          #name: native-executables-${{ matrix.os }}-${{ steps.set_version.outputs.version }}
-          name: native-executables-${{ steps.set_version.outputs.version }}
+          name: native-executables-${{ matrix.os }}-${{ steps.set_version.outputs.version }}          
           path: build
                 
   release:
