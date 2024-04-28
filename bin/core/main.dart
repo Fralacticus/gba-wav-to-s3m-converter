@@ -15,7 +15,14 @@ Future<int> main(List<String> arguments) async {
   ansiColorDisabled = false;
   ColorConsole.afficher_titre();
 
-  clear_directory("./temp");
+  Directory temp_dir = Directory("./temp");
+  if (temp_dir.existsSync()) {
+    clear_directory("./temp");
+  }
+  else {
+    temp_dir.createSync();
+  }
+
 
   var runner = CommandRunner("gba-wav-to-s3m-converter", "Description:\nPour la GBA, convertit un fichier .wav en segments ou fusionne des .wav segmentés en un .s3m\nFor the GBA, converts a .wav file into segments or merges segmented .wav files into a single .s3m")
     ..addCommand(FileCommand())
