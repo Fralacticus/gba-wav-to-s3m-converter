@@ -67,6 +67,6 @@ Il suffit ensuite d'ouvrir une console à la racine du code source et saisir le 
 - Les autres ressources sont sous d'autres licences : 
   - La musique d'exemple Galactic Groove : [galactic_groove_credits.txt](https://github.com/fralacticus/gba-wav-to-s3m-converter/blob/master/examples/galactic_groove_credits.txt)
 
-##c Contact
+## Contact
 Fralacticus - fralacticus@gmail.com  
 Si vous avez repéré un bug, avez besoin d'une fonctionnalité ou avez une idée géniale, le mieux que vous puissiez faire est de vous rendre sur la [page des problèmes (Issues)](https://github.com/fralacticus/gba-wav-to-s3m-converter/issues).
