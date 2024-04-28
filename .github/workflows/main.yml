@@ -35,8 +35,8 @@ jobs:
           - name: Extract version
             run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
           - run: mkdir build
-          - run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}-${{ env.VERSION }}
+          - run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}
           - uses: actions/upload-artifact@v1
             with:
-                name: native-executables
+                name: native-executables-${{ env.VERSION }}
                 path: build
