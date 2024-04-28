@@ -62,19 +62,4 @@ jobs:
       - uses: actions/download-artifact@v4.1.07
         with:
           path: build
-
-      - name: Zip the executables
-        run: |
-          cd build
-          zip -r executables-${{ needs.build.outputs.VERSION }}.zip ./*
-          cd ..
-      
-      - name: Create and upload release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ./build/executables-${{ needs.build.outputs.VERSION }}.zip
-          tag_name: ${{ needs.build.outputs.VERSION }}
-          name: Release ${{ needs.build.outputs.VERSION }}
-          body: 'Release of version ${{ needs.build.outputs.VERSION }}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+   
