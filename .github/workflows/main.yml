@@ -72,7 +72,7 @@ jobs:
       - name: Zip the executables
         run: |
           cd build
-          zip -r executables-${{ needs.build.outputs.version }}.zip ./*
+          zip -r gba-wav-to-s3m-converter-${{ needs.build.outputs.version }}.zip ./*
           cd ..
 
       - name: Create and upload release
