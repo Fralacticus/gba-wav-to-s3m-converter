@@ -10,7 +10,7 @@ Il s'adresse particulièrement aux développeurs utilisant la bibliothèque [But
 **Important :** Les données brutes sonores sont préservés (section 'data' des fichiers .wav).
 
 ## Compatibilité
-Ce logiciel est a été testé et validé sous Windows 11.
+Ce logiciel est a été testé et validé sous Windows 11.  
 **Attention** : dans la release il y a des executables pour Linux et macOS, mais non vérifiés actuellement.
 
 ## Options d'utilisation
@@ -28,7 +28,8 @@ Assurez-vous que vos fichiers .wav ont les paramètres suivant :
 Pour une utilisation rapide et sans installation.  
 Téléchargez d'abord le dossier contenant l'executable via la page [Releases](https://github.com/fralacticus/gba-wav-to-s3m-converter/releases) sur GitHub.  
 - **Convertir un fichier .wav :** 
-Exécutez l'application en spécifiant le chemin du fichier .wav à convertir et le chemin de sortie pour le fichier S3M résultant :
+Exécutez l'application en spécifiant le chemin du fichier .wav à convertir et le chemin de sortie pour le fichier S3M résultant.  
+Vous pouvez éventuellement choisir l'intervalle de secondes entre chaque segment (par défaut 5s) avec l'argument: `--split_interval_sec` ou `-s` suivit du nombre secondes (entier supérieur à 0)
 ```powershell
 ./gba-wav-to-s3m-converter.exe file -i "chemin/vers/le/fichier.wav" -o "chemin/vers/le/fichier.s3m"
 ```
@@ -44,14 +45,15 @@ Assurez-vous d'avoir installé Dart sur votre système.
 Une méthode rapide et sans installation est de [télécharger directement l'archive du SDK](https://dart.dev/get-dart/archive) la plus récente pour Windows.  
 Il suffit ensuite d'ouvrir une console à la racine du code source et saisir le chemin de l'exécutable de Dart, comme ci-dessous.
 
-## Intialiser le projet
-- Lancez d'abord la commande d'initialisation (à ne faire qu'une fois):  
+- **Intialiser le projet**  
+ Lancez d'abord la commande d'initialisation (à ne faire qu'une fois):  
 ```powershell
 "chemin/vers/le/sdk/bin/dart.exe" pub get
 ```
 
 - **Convertir un fichier .wav :**
-  Exécutez l'application en spécifiant le chemin du fichier .wav à convertir et le chemin de sortie pour le fichier S3M résultant :
+  Exécutez l'application en spécifiant le chemin du fichier .wav à convertir et le chemin de sortie pour le fichier S3M résultant.  
+  Vous pouvez éventuellement choisir l'intervalle de secondes entre chaque segment (par défaut 5s) avec l'argument: `--split_interval_sec` ou `-s` suivit du nombre secondes (entier supérieur à 0)
 ```powershell
 "chemin/vers/le/sdk/bin/dart.exe" ./bin/core/main.dart file -i "chemin/vers/le/fichier.wav" -o "chemin/vers/le/fichier.s3m"
 ```

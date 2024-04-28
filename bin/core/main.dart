@@ -82,6 +82,7 @@ class FileCommand extends Command {
   FileCommand() {
     argParser.addOption('wav_path', abbr: 'i', help: 'Chemin du fichier .wav existant / Path to the existing .wav file');
     argParser.addOption('s3m_path', abbr: 'o', help: 'Chemin où le fichier .s3m généré sera enregistré / Path where the generated .s3m file will be saved');
+    argParser.addOption('split_interval_sec', abbr: 's', help: '[Facultatif] Intervalle en secondes entières pour découper le fichier .wav (5s par défaut) / [Optional] Interval in integer seconds for splitting the .wav file (default: 5s)');
   }
 
   @override
@@ -94,11 +95,21 @@ class FileCommand extends Command {
       throw UsageException('s3m_path est obligatoire / s3m_path is mandatory', usage);
     }
 
+
     print(magenta('=> Traitement en cours...') + " (Processing...)");
 
     // Extrait les chemins des dossiers à partir des arguments.
     String wav_path = argResults!['wav_path'];
     String s3m_path = argResults!['s3m_path'];
+    int split_time_interval = 5;
+    if(argResults!['split_interval_sec'] != null ) {
+      int? parse_value = int.tryParse(argResults!['split_interval_sec']);
+      if(parse_value == null || parse_value <= 0){
+        throw UsageException('split_interval_sec doit être un nombre entier supérieur à 0 / split_interval_sec must be an integer greater than 0.', usage);
+      }
+      split_time_interval = parse_value;
+    }
+
 
     // Vérifie l'existence du .wav source
     if(!File(wav_path).existsSync()) {
@@ -107,7 +118,7 @@ class FileCommand extends Command {
 
     print(bleu("- Segmentation du fichier .wav") + " (Segmentation of the .wav file)");
     Wav wav = Wav(wav_path);
-    wav.split_for_gba(5);
+    wav.split_for_gba(split_time_interval);
 
     print(bleu("- Listage des fichiers .wav segmentés") + " (Listing the segmented .wav files)");
     List<File> wav_files = collect_wav_files_from_folder("./temp");
