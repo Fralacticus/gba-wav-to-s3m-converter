@@ -1,4 +1,4 @@
-# Gba Wav to S3m Converter
+# GBA Wav to S3m Converter
 
 ![capture_lancement_executable_via_console_de_commande](docs/capture_lancement.png)
 
@@ -65,7 +65,6 @@ Il suffit ensuite d'ouvrir une console à la racine du code source et saisir le 
 ### Licences
 - Ce projet est sous licence CC BY-SA 4.0, voir le fichier [LICENSE](https://github.com/fralacticus/gba-wav-to-s3m-converter/blob/master/LICENSE) pour les détails.  
 - Les autres ressources sont sous d'autres licences : 
-  - Le logiciel externe Sox utilisé : [LICENSE.GPL.txt](https://github.com/fralacticus/gba-wav-to-s3m-converter/blob/master/sox-14-4-2/LICENSE.GPL.txt)
   - La musique d'exemple Galactic Groove : [galactic_groove_credits.txt](https://github.com/fralacticus/gba-wav-to-s3m-converter/blob/master/examples/galactic_groove_credits.txt)
 
 ### Contact

@@ -18,9 +18,14 @@ class ChunkId {
 }
 
 class ChunkSize{
-  late final Uint8List value_bytes;
-  late final int value_real;
+  late Uint8List value_bytes;
+  late int value_real;
   ChunkSize(this.value_bytes) { value_real = value_bytes.buffer.asByteData().getUint32(0, Endian.little); }
+  ChunkSize.fromInt(this.value_real) {
+    ByteData byteData = ByteData(4);
+    byteData.setInt32(0, value_real, Endian.little);
+    value_bytes = byteData.buffer.asUint8List() ;
+  }
   @override
   String toString() { return "ChunkSize: ${value_bytes.toHexString()} => $value_real"; }
 }
@@ -117,15 +122,20 @@ class Subchunck2ID{
 }
 
 class Subchunck2Size {
-  late final Uint8List value_bytes;
-  late final int value_real;
+  late Uint8List value_bytes;
+  late int value_real;
   Subchunck2Size(this.value_bytes) { value_real = value_bytes.buffer.asByteData().getUint32(0, Endian.little); }
+  Subchunck2Size.fromInt(this.value_real) {
+    ByteData byteData = ByteData(4);
+    byteData.setInt32(0, value_real, Endian.little);
+    value_bytes = byteData.buffer.asUint8List() ;
+  }
   @override
   String toString() { return "Subchunck2Size: ${value_bytes.toHexString()} => $value_real"; }
 }
 
 class Data {
-  late final Uint8List value_bytes;
+  late Uint8List value_bytes;
   Data(this.value_bytes);
   @override
   String toString(){

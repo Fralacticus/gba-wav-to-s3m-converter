@@ -4,6 +4,7 @@
  */
 
 import 'dart:io';
+import 'dart:typed_data';
 import 'WavHeaders.dart';
 
 /// Cette classe offre un moyen pratique de lire les différents composants d'un fichier WAV.
@@ -89,4 +90,73 @@ class Wav {
       data.toString()
     ].join('\n');
   }
+
+  void split_for_gba(int seconds) {
+    assert(numChannels.value_real == 1);
+    assert(sampleRate.value_real == 22050);
+    assert(bitsPerSample.value_real == 8);
+
+    List<List<int>> splitted_datas = _split_datas_for_gba(seconds);
+
+    int saved_chunkSize = chunkSize.value_real;
+    int saved_subChunk2Size = subChunk2Size.value_real;
+    Uint8List saved_data = Uint8List.fromList(data.value_bytes);
+
+    int i = 0;
+    for(List<int> data_part in splitted_datas) {
+      data = Data(Uint8List.fromList(data_part));
+      subChunk2Size = Subchunck2Size.fromInt(data_part.length);
+      chunkSize = ChunkSize.fromInt(36 + subChunk2Size.value_real);
+
+      List<int> bytes = _combine_in_bytes();
+      String file_name = "part-${(i+1).toString().padLeft(6, '0')}.wav";
+      File("./temp/$file_name").writeAsBytesSync(bytes);
+      i +=1;
+    }
+
+    data = Data(Uint8List.fromList(saved_data));
+    subChunk2Size = Subchunck2Size.fromInt(saved_subChunk2Size);
+    chunkSize = ChunkSize.fromInt(saved_chunkSize);
+
+  }
+
+  List<List<int>> _split_datas_for_gba(int seconds) {
+    List<List<int>> divided = [];
+    int max_size = seconds * sampleRate.value_real;
+
+    for (int i = 0; i < data.value_bytes.lengthInBytes ; i += max_size) {
+      divided.add(data.value_bytes.sublist(i, i + max_size > data.value_bytes.lengthInBytes ? data.value_bytes.lengthInBytes : i + max_size));
+    }
+    return divided;
+  }
+
+  List<int> _combine_in_bytes() {
+    return
+      chunkID.value_bytes +
+      chunkSize.value_bytes +
+      format.value_bytes +
+      subChunk1ID.value_bytes +
+      subChunk1Size.value_bytes +
+      audioFormat.value_bytes +
+      numChannels.value_bytes +
+      sampleRate.value_bytes +
+      byteRate.value_bytes +
+      blockAlign.value_bytes +
+      bitsPerSample.value_bytes +
+      subChunk2ID.value_bytes +
+      subChunk2Size.value_bytes +
+      data.value_bytes;
+  }
+}
+
+void main() {
+  String folder = r"E:\SAUVER\Creation\01-Jeux_GBA\005-Utilitaires\test_sox";
+  String wav_file = "$folder\\warfisa.wav";
+  String folder_decoupe = "$folder\\intel_decoup";
+  Wav wav = Wav(wav_file);
+  print("------ Avant");
+  print(wav);
+  wav.split_for_gba(90);
+  print("------ Après");
+  print(wav);
 }

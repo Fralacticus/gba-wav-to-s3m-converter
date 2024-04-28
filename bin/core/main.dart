@@ -99,13 +99,9 @@ class FileCommand extends Command {
       throw Exception("Le fichier $wav_path n'existe pas (The file $wav_path does not exists)");
     }
 
-    print(bleu("- Segmentation du fichier .wav avec le logiciel Sox") + " (Segmentation of the .wav file with Sox software)");
-    ProcessResult result = Process.runSync("./sox-14-4-2/sox.exe", [wav_path, "./temp/part-.wav", "trim", "0", "5", ":", "newfile", ":", "restart"],  runInShell: false, stdoutEncoding:Utf8Codec(), stderrEncoding: Utf8Codec());
-    if(result.exitCode != 0) {
-      stdout.writeln(result.stdout);
-      stderr.writeln(result.stderr);
-      throw Exception("Problème lors de l'execution de Sox / Problem during the execution of Sox");
-    }
+    print(bleu("- Segmentation du fichier .wav") + " (Segmentation of the .wav file)");
+    Wav wav = Wav(wav_path);
+    wav.split_for_gba(5);
 
     print(bleu("- Listage des fichiers .wav segmentés") + " (Listing the segmented .wav files)");
     List<File> wav_files = collect_wav_files_from_folder("./temp");

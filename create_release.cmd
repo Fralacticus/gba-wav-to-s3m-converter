@@ -15,7 +15,7 @@ if exist "%dossier%" (
 dart compile exe .\bin\core\main.dart -o %dossier%\gba-wav-to-s3m-converter.exe
 copy .\README.md %dossier%\README.md
 copy .\LICENSE %dossier%\LICENSE
-robocopy .\sox-14-4-2 %dossier%\sox-14-4-2 /mir
+robocopy .\docs %dossier%\docs
 robocopy .\examples %dossier%\examples /mir
 mkdir %dossier%\temp
 
