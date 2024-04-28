@@ -16,8 +16,8 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    outputs:
-      version: ${{ steps.set_version.outputs.version }}
+    #outputs:
+      #version: ${{ steps.set_version.outputs.version }}
 
     strategy:
       matrix:
@@ -42,7 +42,10 @@ jobs:
       - name: Extract version
         id: set_version
         #run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
-        run: echo "::set-output name=version::$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)"
+        #run: echo "::set-output name=version::$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)"
+        # run: echo "::set-output name={name}::{value}"  -- DEPRECATED
+        # run: echo "{name}={value}" >> $GITHUB_OUTPUT   -- NEW
+        run: echo "version=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
         
       - name: Create versioned build directory
         run: mkdir build
