@@ -16,8 +16,8 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    #outputs:
-      #version: ${{ steps.set_version.outputs.version }}
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
 
     strategy:
       matrix:
@@ -56,7 +56,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: native-executables-${{ matrix.os }}-${{ steps.set_version.outputs.version }}
+          name: native-executables-${{ matrix.os }}-$version
           path: build
                 
   release:
@@ -72,16 +72,16 @@ jobs:
       - name: Zip the executables
         run: |
           cd build
-          zip -r executables-${{ steps.set_version.outputs.version }}.zip ./*
+          zip -r executables-${{ needs.build.outputs.version }}.zip.zip ./*
           cd ..
 
       - name: Create and upload release
         uses: softprops/action-gh-release@v2.0.4
         with:
-          files: ./build/executables-${{ steps.set_version.outputs.version }}.zip
-          tag_name: ${{ steps.set_version.outputs.version }}
-          name: Release ${{ steps.set_version.outputs.version }}
-          body: 'Release of version ${{ steps.set_version.outputs.version }}}'
+          files: ./build/executables-${{ needs.build.outputs.version }}.zip.zip
+          tag_name: ${{ needs.build.outputs.version }}.zip
+          name: Release ${{ needs.build.outputs.version }}.zip
+          body: 'Release of version ${{ needs.build.outputs.version }}.zip'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
    
