@@ -41,7 +41,7 @@ jobs:
         run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
         
       - name: Create versioned build directory
-        run: mkdir -p build/${{ env.VERSION }}
+        run: mkdir ./build/${{ env.VERSION }}
 
       - name: Compile applications
         run: dart compile exe ./bin/core/main.dart -o ./build/${{ env.VERSION }}/${{ matrix.output-name }}
