@@ -44,16 +44,16 @@ jobs:
         run: echo "version=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
         
       - name: Create versioned build directory
-        run: mkdir -p build/${{ steps.extract_version.outputs.version }}
+        run: mkdir build
 
       - name: Compile applications
-        run: dart compile exe ./bin/core/main.dart -o ./build/${{ steps.extract_version.outputs.version }}/${{ matrix.output-name }}
+        run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4.3.3
         with:
           name: gba-wav-to-s3m-converter-${{ matrix.os }}-${{ steps.set_version.outputs.version }}          
-          path: build/${{ steps.extract_version.outputs.version }}
+          path: build
                 
   release:
     needs: build
@@ -67,8 +67,8 @@ jobs:
 
       - name: Zip the executables
         run: |
-          cd build/${{ needs.build.outputs.version }}
-          zip -r ../gba-wav-to-s3m-converter-${{ needs.build.outputs.version }}.zip ./*
+          cd build
+          zip -r gba-wav-to-s3m-converter-${{ needs.build.outputs.version }}.zip ./*
           cd ..
 
       - name: Create and upload release
