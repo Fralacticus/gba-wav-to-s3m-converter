@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI Building Dart
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        include:
+          - os: ubuntu-latest
+            output-name: gba-wav-to-s3m-converter-linux
+          - os: macOS-latest
+            output-name: gba-wav-to-s3m-converter-mac
+          - os: windows-latest
+            output-name: gba-wav-to-s3m-converter-windows.exe
+    steps:
+          - uses: actions/checkout@v2
+          - uses: dart-lang/setup-dart@v1.3
+          - name: Install dependencies
+            run: dart pub get
+          - name: Extract version
+            run: echo "VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)" >> $GITHUB_ENV
+          - run: mkdir build
+          - run: dart compile exe ./bin/core/main.dart -o ./build/${{ matrix.output-name }}-${{ env.VERSION }}
+          - uses: actions/upload-artifact@v1
+            with:
+                name: native-executables
+                path: build
