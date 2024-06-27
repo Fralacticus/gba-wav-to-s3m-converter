@@ -1,3 +1,7 @@
+## 1.4.0
+
+- Ajout validation des spécifications requises : Si le fichier wav (commande file), ou les fichiers wav (commande folder), ne respectent pas les spécifications alors le programme se termine prématurément en indiquant celles qui ne sont pas respectées.
+
 ## 1.3.0
 
 - Ajout possibilité, pour la commande `file`, de choisir l'intervalle de secondes entre chaque segment (par défaut 5s)

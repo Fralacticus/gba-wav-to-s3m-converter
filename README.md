@@ -13,6 +13,7 @@ Il s'adresse particulièrement aux développeurs utilisant la bibliothèque [But
 Ce logiciel est a été testé et validé sous :
 - Windows 11
 - Ubuntu 23.10
+
 **Attention** : dans la release il y a un executable macOS, mais non vérifié actuellement.
 
 ## Options d'utilisation

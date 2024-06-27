@@ -58,13 +58,16 @@ void clear_directory(String directoryPath) {
 }
 
 
-
 void convertir_fichiers_wav_en_s3m(List<File> fichiers_wav, String output_path) {
   print(bleu("- Lecture des fichiers .wav") + " (Reading of .wav files)");
   List<Wav> wavs = [];
   for(File file in fichiers_wav) {
     wavs.add(Wav(file.path));
   }
+  if(wavs.any((element) => !element.valid)) {
+    exit(-1);
+  }
+
   print(bleu("- Conversion au format .s3m") + " (Conversion to .s3m format)");
   S3M s3m = S3M(wavs);
   s3m.build_file();
@@ -118,6 +121,9 @@ class FileCommand extends Command {
 
     print(bleu("- Segmentation du fichier .wav") + " (Segmentation of the .wav file)");
     Wav wav = Wav(wav_path);
+    if(!wav.valid) {
+      exit(-1);
+    }
     wav.split_for_gba(split_time_interval);
 
     print(bleu("- Listage des fichiers .wav segmentés") + " (Listing the segmented .wav files)");
@@ -166,6 +172,8 @@ class FolderCommand extends Command {
     if(wav_files.isEmpty) {
       throw Exception("Le dossier $folder_path ne contient aucun fichier .wav (The folder $folder_path contains no .wav files");
     }
+
+    // Vérifie si tous les fichiers wav
 
     // Opérations de conversion et d'écriture du fichier final
     convertir_fichiers_wav_en_s3m(wav_files, s3m_path);

@@ -27,9 +27,12 @@ class Wav {
   late Subchunck2Size subChunk2Size;
   late Data data;
 
+  bool valid = true;
+
   /// Crée une instance de [Wav] pour lire les informations à partir du chemin de fichier spécifié.
   Wav(String file_path) {
     read_from_file(file_path);
+    validate_required_properties(file_path);
   }
 
   /// Lit le fichier WAV spécifié et initialise les champs de l'entête et des données.
@@ -67,6 +70,39 @@ class Wav {
         exit(-1);
     } finally {
         file?.closeSync();
+    }
+  }
+
+  void validate_required_properties(String file_path){
+    const required_numChannels = 1; // Mono
+    const required_audioFormat  = 1; // Unsigned PCM
+    const required_bitsPerSample = 8; // 8bits
+    const required_sampleRate = 22050; // 22050 Hz
+
+    List<String> errorMessages = [];
+
+    if(numChannels.value_real != required_numChannels) {
+      errorMessages.add("Invalid number of channels. Expected $required_numChannels (Mono), but got ${numChannels.value_real}.");
+      valid = false;
+    }
+    if(audioFormat.value_real != required_audioFormat) {
+      errorMessages.add("Invalid audio format. Expected $required_audioFormat (PCM), but got ${audioFormat.value_real}.");
+      valid = false;
+    }
+    if(bitsPerSample.value_real != required_bitsPerSample) {
+      errorMessages.add("Invalid bits per sample. Expected $required_bitsPerSample bits, but got ${bitsPerSample.value_real}.");
+      valid = false;
+    }
+    if(sampleRate.value_real != required_sampleRate) {
+      errorMessages.add("Invalid sample rate. Expected $required_sampleRate Hz, but got ${sampleRate.value_real} Hz.");
+      valid = false;
+    }
+
+    if(!valid) {
+      stderr.writeln("Error: the .wav file '$file_path' does not conform to the required specifications:");
+      for (String message in errorMessages) {
+        stderr.writeln(message);
+      }
     }
   }
 
